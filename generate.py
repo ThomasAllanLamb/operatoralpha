@@ -19,8 +19,7 @@ def identity (n):
 computed = [[[]]]
 
 def store (m, n, u, r):
-  #ensure the array has sufficient dimension
-  
+  #ensure the array has sufficient dimension, filling undefined indices with -1
   while (len(computed) <= m):
     computed.append([[]])
   while (len(computed[m]) <= n):
