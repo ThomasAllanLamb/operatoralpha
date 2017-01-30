@@ -49,6 +49,7 @@ def recall (m, n, u):
 
 
 def mnu (m, n, u):
+
   if isStored(m, n, u):
     return recall(m, n, u)
 
@@ -76,15 +77,17 @@ def mnu (m, n, u):
       store(m,n,u,result)
       return result
 
-with open('data/standard.csv', 'w') as csvFile:
-  csvWriter = csv.writer(csvFile, delimiter=' ', quotechar='|', quoting=csv.QUOTE_MINIMAL)
+with open('public/standard.csv', 'w') as csvFile:
+  csvWriter = csv.writer(csvFile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
+  #begin by writing column names
+  csvWriter.writerow(['m','n','u','r'])
   #???: should succession (n=0) be included? succession doesn't have an identity, so I am excluding it
   for n in range(1, boundary['n']+1):
     #this algorithm is not designed for values of m below identity, so start the range at identity
     for m in range(identity(n), boundary['m']+1):
       #inputs where u=0 such as 1,3,0 will eventually become 0,3,0. But we have disallowed m=0. So instead of starting at u=0, start at u=identity
       for u in range(identity(n), boundary['u']+1):
-        print "---"
         output = [m, n, u, mnu(m, n, u)]
         csvWriter.writerow(output)
+
   csvFile.close();
