@@ -1,10 +1,11 @@
 {
-  "name": "PythonOperators",
+  "name": "operatoralpha",
   "version": "0.0.0",
   "private": true,
   "scripts": {
     "start": "node ./bin/www"
   },
+  "author":"Thomas Allan Lamb <lambyte@lambyte.com>",
   "dependencies": {
     "body-parser": "~1.15.1",
     "cookie-parser": "~1.4.3",
