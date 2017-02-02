@@ -1,8 +1,8 @@
 var express = require('express');
-var router = express.Router();
 var path = require('path');
 
 function api (app) {
+  var router = express.Router();
 
   //main page displays a demo of the api
   router.get('/', function(req, res, next) {

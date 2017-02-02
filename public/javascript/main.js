@@ -27,7 +27,6 @@
 
       for (let nCategory of categorizedData)
       {
-        $("body").append("<p>n = "+nCategory.key+"</p>");
         var svg = d3.select("body").append('svg')
           .attr('width', svgDim.width)
           .attr('height', svgDim.height)
@@ -38,42 +37,47 @@
         var height = +svg.attr("height") - margin.top - margin.bottom;
         var g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-        var x = d3.scaleLinear()
-          .rangeRound([0, width])
-        ;
-        var y = d3.scaleLinear()
-          .rangeRound([height, 0])
-        ;
-        var u = d3.scaleSequential(d3.interpolateRainbow);
-
+        //develop three scales to map the incoming values onto values which can be displayed.
         var concatenatedUData = data.filter(function (v) {return v.n === parseInt(nCategory.key, 10)});
-
-        x.domain(
-          [0, d3.max(
-            concatenatedUData
-            , function (d) {return d.m}
-          )]
-        );
-        y.domain(
-          [0, d3.max(
-            concatenatedUData
-            , function (d) {return d.r}
-          )]
-        );
-        u.domain(
-          d3.extent(
-            concatenatedUData
-            , function (d) {return d.u}
+        
+        var xScale = d3.scaleLinear()
+          .rangeRound([0, width])
+          .domain(
+            d3.extent(
+              concatenatedUData
+              , function (d) {return d.m}
+            )
           )
-        );
+        ;
+        
+        var yScale = d3.scaleLinear()
+          .rangeRound([height, 0])
+          .domain(
+            d3.extent(
+              concatenatedUData
+              , function (d) {return d.r}
+            )
+          )
+        ;
+        
+        var colorScale = d3.scaleSequential(d3.interpolateRainbow)
+          .domain(
+            d3.extent(
+              concatenatedUData
+              , function (d) {return d.u}
+            )
+          )
+        ;
+
+        
         
         g.append("g")
           .attr("transform", "translate(0," + height + ")")
-          .call(d3.axisBottom(x))
+          .call(d3.axisBottom(xScale))
         ;
 
         g.append("g")
-          .call(d3.axisLeft(y))
+          .call(d3.axisLeft(yScale))
           .append("text")
           .attr("fill", "#000")
           .attr("transform", "rotate(-90)")
@@ -87,11 +91,11 @@
         {
           
           var line = d3.line()
-            .x(function(d) { return x(d.m); })
-            .y(function(d) { return y(d.r); })
+            .x(function(d) { return xScale(d.m); })
+            .y(function(d) { return yScale(d.r); })
           ;
           
-          var colorString = u(+uCategory.key);
+          var colorString = colorScale(+uCategory.key);
           g.append("path")
             .datum(uCategory.values)
             .attr("fill", "none")
@@ -103,9 +107,45 @@
           ;
         }
       }
+
+      //when buttons are clicked, cycle through graphs
+      //!!!: this only works if we assume that there are no other SVG elements in the document. The correct way to do this is to have the SVG generator enter the SVG elements into an array rather than attach them to the body, and then pass that array. But I can't figure out how to create detached D3 elements right now, so this will work in the meantime.
+      var $svgs = $("svg");
+      var slideshow = (function (elements) {
+        function enforceTargetIndexVisibility () {
+          $ul.children()
+            .hide()
+            .eq(targetIndex).show()
+          ;
+        }
+
+        //the list containing all the elements to be shown
+        var $ul = $("<ul>");
+        for (element of elements)
+        {
+          $ul.append(element);
+        }
+        var targetIndex = 0;
+        enforceTargetIndexVisibility();
+
+        
+
+        var $dOMElement = $("<div>")
+          .append($ul);
+        
+        
+        $dOMElement.on("click", function (event) {
+          targetIndex = (targetIndex+1)%elements.length;
+          enforceTargetIndexVisibility();
+
+          event.preventDefault();
+        })
+
+        //return the DOM Element itself rather than the jquery object in case we stop using jquery in the future
+        return $dOMElement.get(0)
+      })($svgs.toArray());
+
+      $("body").append(slideshow)
     }
   );
 })();
-
-//when buttons are clicked, cycle through graphs
-//
