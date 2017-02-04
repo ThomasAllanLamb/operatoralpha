@@ -40,9 +40,10 @@
         .entries(data)
       ;
 
+      var svgs = [];
       for (let nCategory of categorizedData)
       {
-        var svg = d3.select("#chart").append('svg')
+        var svg = d3.select(document.createElementNS(d3.namespaces.svg, 'svg'))
           .attr('width', svgDim.width)
           .attr('height', svgDim.height)
         ;
@@ -132,11 +133,12 @@
             .attr("d", line)
           ;
         }
+
+        svgs.push(svg.node());
       }
 
       //when buttons are clicked, cycle through graphs
-      //!!!: this only works if we assume that there are no other SVG elements in the document. The correct way to do this is to have the SVG generator enter the SVG elements into an array rather than attach them to the body, and then pass that array. But I can't figure out how to create detached D3 elements right now, so this will work in the meantime.
-      var $svgs = $("svg");
+      var $svgs = $(svgs);
       var slideshow = (function (elements) {
         function enforceTargetIndex () {
           $ul.children()
