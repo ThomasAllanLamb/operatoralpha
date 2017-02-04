@@ -7,13 +7,28 @@
   d3.csv(
     "api/standard"
     , function(row) {
-      //each cell is in string format, so convert to numbers
-      return {
-        m: +row.m,
-        n: +row.n,
-        u: +row.u,
-        r: +row.r
+      //each cell is in string format, so convert to numbers. Javascript converts numbers which are too high or too low to infinity. Discard those rows because D3 can't plot them.
+      var formattedRow = {};
+      var columns = ["m","n","u","r"];
+      for (var i = 0; i <= columns.length-1; i++)
+      {
+        var column = columns[i];
+        var formattedValue = +row[column];
+
+        //if the value can't be plotted...
+        if (formattedValue === Number.POSITIVE_INFINITY
+          || formattedValue === Number.NEGATIVE_INFINITY)
+        {
+          //...discard this row
+          return undefined;
+        }
+
+        //the value is valid, so add it to the row
+        formattedRow[column] = formattedValue;
       }
+
+      //all values in this row are valid numbers.
+      return formattedRow;
     }
     , function(error, data) {
       if (error) throw error;
@@ -27,7 +42,7 @@
 
       for (let nCategory of categorizedData)
       {
-        var svg = d3.select("body").append('svg')
+        var svg = d3.select("#chart").append('svg')
           .attr('width', svgDim.width)
           .attr('height', svgDim.height)
         ;
@@ -69,13 +84,13 @@
           )
         ;
 
-        
-        
+        //draw x axis
         g.append("g")
           .attr("transform", "translate(0," + height + ")")
           .call(d3.axisBottom(xScale))
         ;
 
+        //draw y axis
         g.append("g")
           .call(d3.axisLeft(yScale))
           .append("text")
@@ -85,6 +100,17 @@
           .attr("dy", "0.71em")
           .attr("text-anchor", "end")
           .text("m")
+        ;
+
+        //indicate which n slice this is. Position is arbitrary
+        g.append("text")
+          .text("n = "+nCategory.key)
+          .attr("x", 40)
+          .attr("y", 40)
+          .attr("style", "font-family:monospace;"
+            +"font-size:50px;"
+            +"fill:#BBBBBB;"
+          )
         ;
 
         for (let uCategory of nCategory.values)
@@ -112,7 +138,7 @@
       //!!!: this only works if we assume that there are no other SVG elements in the document. The correct way to do this is to have the SVG generator enter the SVG elements into an array rather than attach them to the body, and then pass that array. But I can't figure out how to create detached D3 elements right now, so this will work in the meantime.
       var $svgs = $("svg");
       var slideshow = (function (elements) {
-        function enforceTargetIndexVisibility () {
+        function enforceTargetIndex () {
           $ul.children()
             .hide()
             .eq(targetIndex).show()
@@ -126,17 +152,14 @@
           $ul.append(element);
         }
         var targetIndex = 0;
-        enforceTargetIndexVisibility();
-
-        
+        enforceTargetIndex();
 
         var $dOMElement = $("<div>")
           .append($ul);
-        
-        
+                
         $dOMElement.on("click", function (event) {
           targetIndex = (targetIndex+1)%elements.length;
-          enforceTargetIndexVisibility();
+          enforceTargetIndex();
 
           event.preventDefault();
         })
@@ -145,7 +168,7 @@
         return $dOMElement.get(0)
       })($svgs.toArray());
 
-      $("body").append(slideshow)
+      $("#chart").append(slideshow)
     }
   );
 })();

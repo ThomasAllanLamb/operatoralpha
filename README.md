@@ -6,7 +6,7 @@ Arbitrary operator identities.
 
 ### Possible future features
 
-Generalizing the domains of m and u from the set of integers to the set of reals.
+Generalizing the domains of m and u from the set of naturals to the set of integers or reals.
 
 ### Open questions
 
