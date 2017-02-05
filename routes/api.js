@@ -1,6 +1,7 @@
 var express = require('express');
 var path = require('path');
 
+//???: is there a less confusing way to name this?
 function api (app) {
   var router = express.Router();
 

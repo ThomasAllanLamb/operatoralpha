@@ -137,40 +137,46 @@
         svgs.push(svg.node());
       }
 
-      //when buttons are clicked, cycle through graphs
-      var $svgs = $(svgs);
-      var slideshow = (function (elements) {
-        function enforceTargetIndex () {
-          $ul.children()
-            .hide()
-            .eq(targetIndex).show()
-          ;
-        }
-
-        //the list containing all the elements to be shown
-        var $ul = $("<ul>");
-        for (element of elements)
-        {
-          $ul.append(element);
-        }
-        var targetIndex = 0;
-        enforceTargetIndex();
-
-        var $dOMElement = $("<div>")
-          .append($ul);
-                
-        $dOMElement.on("click", function (event) {
-          targetIndex = (targetIndex+1)%elements.length;
-          enforceTargetIndex();
-
-          event.preventDefault();
-        })
-
-        //return the DOM Element itself rather than the jquery object in case we stop using jquery in the future
-        return $dOMElement.get(0)
-      })($svgs.toArray());
-
-      $("#chart").append(slideshow)
+      var slideshow = Slideshow(svgs);
+      document.getElementById("chart").appendChild(slideshow);
     }
   );
+
+  var Slideshow = (function () {
+    var slideshow = function (elements) {
+      //build dom
+      var $dOMElement = $("<div>");
+      var $ul = $("<ul>");
+      $dOMElement.append($ul);
+      for (element of elements)
+      {
+        $ul.append(
+          $("<li>").append(element)
+        );
+      }
+
+      //initialize visibility
+      function enforceTargetIndex () {
+        $ul.children()
+          .hide()
+          .eq(targetIndex).show()
+        ;
+      }
+      var targetIndex = 0;
+      enforceTargetIndex();
+      
+      //change visibility on click        
+      $dOMElement.on("click", function (event) {
+        targetIndex = (targetIndex+1)%elements.length;
+        enforceTargetIndex();
+
+        event.preventDefault();
+      })
+
+      return $dOMElement.get(0)
+    }
+
+    return slideshow;
+  })();
+
 })();
