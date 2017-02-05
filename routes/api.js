@@ -11,7 +11,7 @@ function api (app) {
   //api
   //get all points, assuming standard identities
   router.get('/standard', function (req, res) {
-    res.sendFile(path.join(app.get('staticPath'),'standard.csv'));;
+    res.sendFile(path.join(app.get('dataPath'),'standard.csv'));;
     return;  
   })
 

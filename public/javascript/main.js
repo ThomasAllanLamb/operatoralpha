@@ -16,8 +16,7 @@
         var formattedValue = +row[column];
 
         //if the value can't be plotted...
-        if (formattedValue === Number.POSITIVE_INFINITY
-          || formattedValue === Number.NEGATIVE_INFINITY)
+        if (!Number.isSafeInteger(formattedValue))
         {
           //...discard this row
           return undefined;

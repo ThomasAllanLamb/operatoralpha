@@ -19,7 +19,7 @@ app.use(cookieParser());
 app.use(require('less-middleware')(path.join(__dirname, 'public')));
 
 //static files
-app.set('staticPath', path.join(__dirname, 'public'))
+app.set('dataPath', path.join(__dirname, 'data'))
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
