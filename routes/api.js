@@ -8,10 +8,10 @@ function api (app) {
   //main page displays a demo of the api
   router.get('/', function(req, res, next) {
   });
-  //api
+
   //get all points, assuming standard identities
   router.get('/standard', function (req, res) {
-    res.sendFile(path.join(app.get('dataPath'),'standard.csv'));;
+    res.sendFile(path.join(app.get('dataPath'),'standard.csv'));
     return;  
   })
 
