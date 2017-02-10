@@ -2,9 +2,16 @@ This project provides tools to calculate and visualize [Hyperoperation](https://
 
 ### Setup
 
+Bundle the javascript:
 ```shell
 browserify lib/main.js -o public/javascript/bundle.js
 ```
+
+Generate a .csv full of the first few points (3,4,6 chosen because that's as much as my computer can handle):
+```shell
+python generate.py 3 4 6
+```
+
 
 ### Not yet implemented
 
@@ -21,6 +28,8 @@ Can n be a real value?
 ### To do
 
 - API versioning
-- Consider switching slideshow from jquery to d3
 - Prevent text from highlighting when graphs are clicked
 - Add transition between graphs
+- Switch from storing generated points in a csv to storing generated points in a database
+- Make transitions look better
+- Add a paragraph explaining the meaning of the graph
