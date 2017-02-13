@@ -2,6 +2,7 @@
 
 import sys
 import pdb
+import os
 
 print 'Argument List:', str(sys.argv)
 
@@ -95,7 +96,7 @@ def mnu_recursive (m, n, u):
 
   #print 'store('+str(m)+','+str(n)+','+str(u)+','+str(result)+')'
 
-#algorithm converts operation to array rather than making function calls
+#algorithm converts loops over an array rather than recursing in order to avoid stack overflow
 def mnu_array (m, n, u):
   return mnu_array_helper([u, m], [n])
 
@@ -105,14 +106,7 @@ def mnu_array_helper (um, n):
   #to make the loop more uniform, we put u at the beginning of the m array
 
   #while there are more operations to perform...
-  #if (um == [3,3] and n[0] == 3):
-  #  pdb.set_trace()
   while(len(n) >= 1):
-    #p = str(um[0])
-    #for i in range(0, len(n)):
-    #  p = str(um[i+1]) + "(" + str(n[i]) + ")" +p
-    #print p
-
     topM = um[-1]
     topN = n[-1]
     topU = um[-2]
@@ -144,7 +138,6 @@ def mnu_array_helper (um, n):
 
     else:
       #print "recurse"
-
       um.pop()
       um.pop()
       n.pop()
@@ -155,7 +148,15 @@ def mnu_array_helper (um, n):
   return um[0]
 
 
-with open('public/standard.array.csv', 'w') as csvFile:
+outputRelativePath = "data/standard.csv"
+
+#ensure that target directory exists
+outputRelativeDirectory = os.path.dirname(outputRelativePath)
+print outputRelativeDirectory
+if not os.path.exists(outputRelativeDirectory):
+    os.makedirs(outputRelativeDirectory)
+
+with open(outputRelativePath, 'w') as csvFile:
   csvWriter = csv.writer(csvFile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
   #begin by writing column names
   csvWriter.writerow(['m','n','u','r'])
