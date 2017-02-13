@@ -12,6 +12,11 @@ Generate a .csv full of the first few points (3,4,6 chosen because that's as muc
 python generate.py 3 4 6
 ```
 
+Start the server:
+```
+node start
+```
+
 
 ### Not yet implemented
 
