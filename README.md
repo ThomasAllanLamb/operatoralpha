@@ -13,8 +13,17 @@ python generate.py 3 4 6
 ```
 
 Start the server:
-```
+```shell
 node start
+```
+
+Visit [localhost:3000](http://localhost:3000)
+
+## To use port 80
+
+When starting the server, instead use
+```shell
+sudo PORT=80 node start
 ```
 
 
