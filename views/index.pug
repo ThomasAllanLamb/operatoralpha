@@ -6,16 +6,23 @@ html
     script(src='http://code.jquery.com/jquery-1.9.1.min.js')
     script(src='https://d3js.org/d3.v4.js')
     script(type='text/javascript' src='javascript/bundle.js')
+    style(type="text/css").
+      .variable {
+        font-weight:bold
+      }
   body
     h1 Hyperoperation visualization
     span#about Thomas Lamb
     div#chart
     p Click to cycle through different slices of n.
-    p This is a visualization of <a href="https://en.wikipedia.org/wiki/Hyperoperation">hyperoperation</a>
-    p In broad strokes, hyperoperation is what you're talking about when you ask "what comes after addition, multiplication, and exponentiation?"
-    p There are four variables in question:
-    p(style="text-align:center;font-size:large") u<span style='vertical-align:super'>m</span> = r
-    p And <span style="font-weight:bold">n</span>, which indicates the "level" of the operator:
+    p This is a visualization of <a href="https://en.wikipedia.org/wiki/Hyperoperation">hyperoperation</a>. In broad strokes, hyperoperation is what you're talking about when you ask "what comes after addition, multiplication, and exponentiation?"
+    h3 What is being plotted
+    p There are four variables in question. The operands <span class="variable">u</span>, <span class="variable">m</span>, and result <span class="variable">r</span>:
+    p(style="text-align:center;font-size:large")
+      | u + m = r<br>
+      | u &times; m = r<br>
+      | u <span style='vertical-align:super'>m</span> = r 
+    p And <span class="variable">n</span>, which indicates the "level" of the operator:
     table(style="margin:0px auto;font-size:larger")
       thead
         tr
@@ -33,3 +40,9 @@ html
           td ^
         tr
           td &#x22ee;
+    h3 Why?
+    p This is a puzzle which is just for fun. Here are some remaining goals:
+    ol
+      li Generalize the operands to the set of Reals or more
+      li Generalize the algorithm to allow for different identities.
+      li Calculate the values of mathematical constants with different identities. Look at the forms of famous formulae with different identities
