@@ -26,24 +26,14 @@ When starting the server, instead use
 sudo PORT=80 node start
 ```
 
-
-### Not yet implemented
-
-Arbitrary operator identities. 
-
-### Possible future features
-
-Generalizing the domains of m and u from the set of naturals to the set of integers or reals.
-
-### Open questions
-
-Can n be a real value?
-
 ### To do
 
+- Arbitrary operator identities
+- Generalizing the domains of m and u from the set of naturals to the set of integers or reals.
 - API versioning
 - Prevent text from highlighting when graphs are clicked
 - Add transition between graphs
 - Switch from storing generated points in a csv to storing generated points in a database
 - Make transitions look better
 - Add a paragraph explaining the meaning of the graph
+- Node start is not working on production
