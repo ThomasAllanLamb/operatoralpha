@@ -14,16 +14,17 @@ python generate.py 3 4 6
 
 Start the server:
 ```shell
-node start
+node ./bin/www
 ```
 
 Visit [localhost:3000](http://localhost:3000)
 
-## To use port 80
 
-When starting the server, instead use
+## To specify hostname or port
+
+Start with:
 ```shell
-sudo PORT=80 node start
+HOSTNAME=myHostname PORT=myPort node ./bin/www
 ```
 
 ### To do
