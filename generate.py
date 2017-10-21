@@ -70,11 +70,11 @@ def mnu_recursive (m, n, u):
   #use native operators when possible
   if n == 1:
     #addition
-    return m+u-(identity(n))
-  #???: can standard multiplication be used when i(1) !== 0?
-  elif (n == 2 and (identity(1) == 0)): 
+    return u+m-(identity(n))
+  elif n == 2: 
     #multiplication
-    return m*(u-identity(2)+1)
+    return u+(m-identity(2))*(u-identity(1))
+  #???: can exponentiation with arbitrary identities be rewritten using native operators?
   elif (n == 3 and identity(1) == 0 and identity(2) == 1):
     #exponentiation
     return u**(m-identity(3)+1)
@@ -96,7 +96,7 @@ def mnu_recursive (m, n, u):
 
   #print 'store('+str(m)+','+str(n)+','+str(u)+','+str(result)+')'
 
-#algorithm converts loops over an array rather than recursing in order to avoid stack overflow
+#algorithm loops over an array rather than recursing in order to avoid stack overflow
 def mnu_array (m, n, u):
   return mnu_array_helper([u, m], [n])
 
@@ -112,8 +112,8 @@ def mnu_array_helper (um, n):
     topU = um[-2]
 
     #use native operators where possible
-    if (topN == 2 and identity(1) == 0):
-      um[-2] = topM*(topU-identity(topN)+1)
+    if topN == 2:
+      um[-2] = topU+(topM-identity(2))*(topU-identity(1))
       n.pop()
       um.pop()
 

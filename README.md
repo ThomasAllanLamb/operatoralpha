@@ -38,3 +38,4 @@ HOSTNAME=myHostname PORT=myPort node ./bin/www
 - Make transitions look better
 - Add a paragraph explaining the meaning of the graph
 - Node start is not working on production
+- Add support for bounds
