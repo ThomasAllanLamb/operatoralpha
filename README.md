@@ -9,7 +9,7 @@ browserify lib/main.js -o public/javascript/bundle.js
 
 Generate a .csv full of the first few points (3,4,6 chosen because that's as much as my computer can handle):
 ```shell
-python generate.py 3 4 6
+python generate-exact.py 3 4 6
 ```
 
 Start the server:

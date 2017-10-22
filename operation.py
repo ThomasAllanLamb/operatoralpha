@@ -135,3 +135,70 @@ def r_array_helper (um, n):
       n.extend([topN-1, topN])
 
   return um[0]
+
+def r_bounded (m, n, u, ttl):
+  if isStored(m, n, u):
+    return [recall(m, n, u), 0]
+
+  #use native operators when possible
+  if n == 1:
+    #addition
+    return [u+m-(identity(n)), 0]
+  elif n == 2: 
+    #multiplication
+    return [u+(m-identity(2))*(u-identity(1)), 0]
+  #???: can exponentiation with arbitrary identities be rewritten using native operators?
+  elif (n == 3 and identity(1) == 0 and identity(2) == 1):
+    #exponentiation
+    return [u**(m-identity(3)+1), 0]
+
+
+  elif m < identity(n):
+    #print "recurse"
+    #???: this seems to add time to live by duplicating it. Is that right? Should we be doing that?
+    #???: unsure how to pass the results of r_bounded as a single parameter. Choosing to just take the lower bound for simplicity
+    return m_bounded(n-1, u, r_bounded(m+1, n, u, ttl)[0], ttl)
+  #solve using definition
+  elif m == identity(n):
+    #print "identity"
+    # if m is the identity of n, return u
+    return [u, 0]
+  elif m > identity(n):
+    #print "recurse"
+    #!!!: we assume that 
+    return [r(m,n,u), 0]
+
+def m_bounded (n, u, target, ttl):
+  print "m_bounded ("+str(n)+", "+str(u)+", "+str(target)+", "+str(ttl)+")"
+  bounds = [None, None]
+
+  guess = 1;
+  #find initial bounds
+  while bounds[0] is None or bounds[1] is None:
+    #make our guess change as quickly as m might change
+    #!!! we're sending r(0,0,0) but r currently can't take sub-identity m or n = 0
+    test = r(guess, n, u)
+    if (test < target):
+      bounds[0] = guess
+      guess += 1
+    elif (test == target):
+      return [guess, 0]
+    elif (test > target):
+      bounds[1] = guess
+      guess -= 1
+
+  #bounds is now valid.
+  while (ttl >= 1):
+    #???: guessing the midpoint is probably not optimal
+    guess = (bounds[0]+bounds[1])/2
+    test = r(guess, n, u)
+    if (test < target):
+      bounds[0] = guess
+    elif (test == target):
+      return [guess, 0]
+    elif (test > target):
+      bounds[1] = guess
+
+    ttl -= 1
+
+  return [bounds[0], length]
