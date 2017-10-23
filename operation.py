@@ -137,8 +137,17 @@ def r_array_helper (um, n):
   return um[0]
 
 def r_bounded (m, n, u, ttl):
-  if isStored(m, n, u):
-    return [recall(m, n, u), 0]
+  print "r_bounded ("+str(m)+", "+str(n)+", "+str(u)+", "+str(ttl)+")"
+
+  #temporary catch for floats. We currently can't handle them
+  if (m%1 != 0):
+    lower = r_bounded(math.floor(m), n, u, ttl)
+    upper = r_bounded(math.ceil(m), n, u, ttl)
+    return [lower, upper-lower]
+
+  #re-implement isStored later
+  #if isStored(m, n, u):
+  #  return [recall(m, n, u), 0]
 
   #use native operators when possible
   if n == 1:
@@ -157,7 +166,16 @@ def r_bounded (m, n, u, ttl):
     #print "recurse"
     #???: this seems to add time to live by duplicating it. Is that right? Should we be doing that?
     #???: unsure how to pass the results of r_bounded as a single parameter. Choosing to just take the lower bound for simplicity
-    return m_bounded(n-1, u, r_bounded(m+1, n, u, ttl)[0], ttl)
+    #???: I'm pretty sure this is wrong. Can we assume that the lower bound of the r component being sent to m_bounded will result in a lower range than the upper bound of r being sent to m_bounded?
+    rComponent = r_bounded(m+1, n, u, ttl)
+    lowerR = rComponent[0]
+    upperR = rComponent[0]+rComponent[1]
+    lowerM = m_bounded(n-1, u, lowerR, ttl)
+    upperM = m_bounded(n-1, u, upperR, ttl)
+    #???: this is not the honest way to combine ranges, but we're doing it
+    lowerBound = lowerM[0]
+    length = upperM[0]+upperM[1]-lowerBound
+    return [lowerBound, length]
   #solve using definition
   elif m == identity(n):
     #print "identity"
@@ -172,12 +190,12 @@ def m_bounded (n, u, target, ttl):
   print "m_bounded ("+str(n)+", "+str(u)+", "+str(target)+", "+str(ttl)+")"
   bounds = [None, None]
 
-  guess = 1;
+  #???: should we start guess at 0?
+  guess = 0;
   #find initial bounds
   while bounds[0] is None or bounds[1] is None:
-    #make our guess change as quickly as m might change
-    #!!! we're sending r(0,0,0) but r currently can't take sub-identity m or n = 0
-    test = r(guess, n, u)
+    #!!! but r currently can't take sub-identity m
+    test = r_bounded(guess, n, u, ttl)
     if (test < target):
       bounds[0] = guess
       guess += 1
@@ -191,7 +209,7 @@ def m_bounded (n, u, target, ttl):
   while (ttl >= 1):
     #???: guessing the midpoint is probably not optimal
     guess = (bounds[0]+bounds[1])/2
-    test = r(guess, n, u)
+    test = r_bounded(guess, n, u, ttl)
     if (test < target):
       bounds[0] = guess
     elif (test == target):
@@ -201,4 +219,5 @@ def m_bounded (n, u, target, ttl):
 
     ttl -= 1
 
+  length = bounds[1]-bounds[0]
   return [bounds[0], length]
