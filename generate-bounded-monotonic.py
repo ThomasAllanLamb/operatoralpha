@@ -28,15 +28,13 @@ if not os.path.exists(outputRelativeDirectory):
 with open(outputRelativePath, 'w') as csvFile:
   csvWriter = csv.writer(csvFile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
   #begin by writing column names
-  csvWriter.writerow(['m','n','u','r_midpoint', 'r_spread'])
+  csvWriter.writerow(['m','n','u','r_lower', 'r_upper'])
   for n in range(boundary['lowerN'], boundary['upperN']):
     for m in range(boundary['lowerM'], boundary['upperM']):
       for u in range(boundary['lowerU'], boundary['upperU']):
         print '--- r('+str(m)+', '+str(n)+', '+str(u)+')'
         r = operation.r_bounded_assume_monotonic(m, n, u, ttl)
-        midpoint = r[0]+r[1]/2
-        spread = r[1]
-        output = [m, n, u, midpoint, spread]
+        output = [m, n, u, r[0], r[1]]
         print "="+str(r)
         csvWriter.writerow(output)
 

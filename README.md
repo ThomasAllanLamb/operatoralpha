@@ -39,4 +39,4 @@ HOSTNAME=myHostname PORT=myPort node ./bin/www
 - Add a paragraph explaining the meaning of the graph
 - Node start is not working on production
 - Add support for bounds
-- Generalize n to non-positive integers
+- Generalize n to numbers which are not positive integers
