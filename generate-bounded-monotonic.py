@@ -29,12 +29,11 @@ with open(outputRelativePath, 'w') as csvFile:
   csvWriter = csv.writer(csvFile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
   #begin by writing column names
   csvWriter.writerow(['m','n','u','r_midpoint', 'r_spread'])
-  #???: should succession (n=0) be included? succession doesn't have an identity, so I am excluding it
   for n in range(boundary['lowerN'], boundary['upperN']):
     for m in range(boundary['lowerM'], boundary['upperM']):
       for u in range(boundary['lowerU'], boundary['upperU']):
         print '--- r('+str(m)+', '+str(n)+', '+str(u)+')'
-        r = operation.r_bounded(m, n, u, ttl)
+        r = operation.r_bounded_assume_monotonic(m, n, u, ttl)
         midpoint = r[0]+r[1]/2
         spread = r[1]
         output = [m, n, u, midpoint, spread]
