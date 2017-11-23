@@ -7,4 +7,7 @@ import operation
 
 print 'Argument List:', str(sys.argv)
 
-print operation.r_bounded_assume_monotonic(int(sys.argv[1]), int(sys.argv[2]), int(sys.argv[3]), int(sys.argv[4]))
+r_bounds = operation.r_bounded_assume_monotonic(int(sys.argv[1]), int(sys.argv[2]), int(sys.argv[3]), int(sys.argv[4]))
+
+print "min\tmax"
+print str(r_bounds[0])+"\t"+str(r_bounds[1])

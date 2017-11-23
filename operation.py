@@ -136,14 +136,14 @@ def r_array_helper (um, n):
 
   return um[0]
 
-def r_bounded_assume_monotonic (m, n, u, ttl):
-  print "r_bounded ("+str(m)+", "+str(n)+", "+str(u)+", "+str(ttl)+")"
+def r_bounded_assume_monotonic (m, n, u, ttl, indentation = 1):
+  print (".   "*(indentation-1))+"r_bounded ("+str(m)+", "+str(n)+", "+str(u)+", "+str(ttl)+")"
 
   #temporary catch for floats. We currently can't handle them
   if (m%1 != 0):
-    print "caught float"
-    lower = r_bounded_assume_monotonic(math.floor(m), n, u, ttl-1)
-    upper = r_bounded_assume_monotonic(math.ceil(m), n, u, ttl-1)
+    print (".   "*indentation)+"caught float"
+    lower = r_bounded_assume_monotonic(math.floor(m), n, u, ttl, indentation+1)
+    upper = r_bounded_assume_monotonic(math.ceil(m), n, u, ttl, indentation+1)
     return [lower[0], upper[1]]
 
   #re-implement isStored later
@@ -168,11 +168,11 @@ def r_bounded_assume_monotonic (m, n, u, ttl):
     #???: this seems to add time to live by duplicating it. Is that right? Should we be doing that?
     #???: unsure how to pass the results of r_bounded as a single parameter. Choosing to just take the lower bound for simplicity
     #???: I'm pretty sure this is wrong. Can we assume that the lower bound of the r component being sent to m_bounded will result in a lower range than the upper bound of r being sent to m_bounded?
-    rComponent = r_bounded_assume_monotonic(m+1, n, u, ttl-1)
+    rComponent = r_bounded_assume_monotonic(m+1, n, u, ttl, indentation+1)
     lowerR = rComponent[0]
     upperR = rComponent[1]
-    lowerM = m_bounded_assume_monotonic(n-1, u, lowerR, ttl-1)
-    upperM = m_bounded_assume_monotonic(n-1, u, upperR, ttl-1)
+    lowerM = m_bounded_assume_monotonic(n-1, u, lowerR, ttl, indentation+1)
+    upperM = m_bounded_assume_monotonic(n-1, u, upperR, ttl, indentation+1)
     #???: this is not the honest way to combine ranges, but we're doing it
     return [lowerM[0], upperM[1]]
   #solve using definition
@@ -185,25 +185,27 @@ def r_bounded_assume_monotonic (m, n, u, ttl):
     #!!!: we only accept integers, so if m>identity, we can use positive integer algorithm
     return [r(m,n,u), r(m,n,u)]
 
-def m_bounded_assume_monotonic (n, u, target, ttl):
-  print "m_bounded ("+str(n)+", "+str(u)+", "+str(target)+", "+str(ttl)+")"
+def m_bounded_assume_monotonic (n, u, target, ttl, indentation = 1):
+  print (".   "*(indentation-1))+"m_bounded ("+str(n)+", "+str(u)+", "+str(target)+", "+str(ttl)+")"
   bounds = [None, None]
 
   #???: should we start guess at 0?
   #we currently modify our guess by 1 each loop, making test = r(r(guess, 1, 0), n, u). It might make more sense to modify it by some faster-growing function like test = r(r(guess,guess,guess), n, u)
   guess = 0;
   #find initial bounds
+  print (".   "*indentation)+"target="+str(target)
   while (bounds[0] is None or bounds[1] is None) and ttl >= 1:
-    test = r_bounded_assume_monotonic(guess, n, u, ttl-1)
-    print "test "+str(target)+" "+str(test)
+    print (".   "*indentation)+"guess="+str(guess)
+    test = r_bounded_assume_monotonic(guess, n, u, ttl, indentation+1)
+    print (".   "*indentation)+"test="+str(test)
     if (test[1] < target):
       #guessed too low.
       bounds[0] = guess
       guess += 1
-    elif (test[0] < target and test[1] > target):
+    elif (test[0] <= target and test[1] >= target):
       if (test[0] == target and test[1] == target):
         #we guessed it exactly.
-        return test
+        return [guess, guess]
       else:
         #the target is within the bounds of the test. This doesn't tell us anything.
         #???: this will preferentially guess downward when our initial guess is near the correct answer. Is there a better choice?
@@ -227,7 +229,7 @@ def m_bounded_assume_monotonic (n, u, target, ttl):
     while (ttl >= 1):
       #???: guessing the midpoint is probably not optimal
       guess = (bounds[0]+bounds[1])/2
-      test = r_bounded_assume_monotonic(guess, n, u, ttl-1)
+      test = r_bounded_assume_monotonic(guess, n, u, ttl, indentation+1)
       if (test < target):
         bounds[0] = guess
       elif (test == target):

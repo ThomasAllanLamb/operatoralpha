@@ -33,10 +33,8 @@ HOSTNAME=myHostname PORT=myPort node ./bin/www
 - Generalizing the domains of m and u from the set of naturals to the set of integers or reals.
 - API versioning
 - Prevent text from highlighting when graphs are clicked
-- Add transition between graphs
 - Switch from storing generated points in a csv to storing generated points in a database
-- Make transitions look better
 - Add a paragraph explaining the meaning of the graph
 - Node start is not working on production
-- Add support for bounds
 - Generalize n to numbers which are not positive integers
+- Generalize m to rationals
