@@ -7,9 +7,9 @@ Bundle the javascript:
 browserify lib/main.js -o public/javascript/bundle.js
 ```
 
-Generate a .csv full of the first few points (3,4,6 chosen because that's as much as my computer can handle):
+Generate a .csv of some points. (these parameters are about as much as my computer can handle):
 ```shell
-python generate-exact.py 3 4 6
+python generate-bounded.py -5 1 1 6 7 3 10
 ```
 
 Start the server:

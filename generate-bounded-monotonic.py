@@ -8,6 +8,11 @@ import operation
 
 print 'Argument List:', str(sys.argv)
 
+if (len(sys.argv) != 8):
+  print "Usage: python generate-bounded-monotonic.py mMin nMin uMin mLength nLength uLength timeToLive"
+  sys.exit()
+
+
 boundary = {
   'lowerM': int(sys.argv[1]), 
   'upperM': int(sys.argv[1])+int(sys.argv[4]),
