@@ -240,3 +240,68 @@ def m_bounded_assume_monotonic (n, u, target, ttl, indentation = 1):
       ttl -= 1
 
     return bounds
+
+def r_bounded (m, n, u, ttl, indentation = 1):
+  print (".   "*(indentation-1))+"r_bounded ("+str(m)+", "+str(n)+", "+str(u)+", "+str(ttl)+")"
+
+  #temporary catch for floats. We currently can't handle them
+  if (m%1 != 0):
+    print (".   "*indentation)+"caught float"
+    lower = r_bounded_assume_monotonic(math.floor(m), n, u, ttl, indentation+1)
+    upper = r_bounded_assume_monotonic(math.ceil(m), n, u, ttl, indentation+1)
+    return [lower[0], upper[1]]
+
+  #re-implement isStored later
+  #if isStored(m, n, u):
+  #  return [recall(m, n, u), 0]
+
+  #use native operators when possible
+  if n == 1:
+    #addition
+    return [u+m-(identity(n)), u+m-(identity(n))]
+  elif n == 2: 
+    #multiplication
+    return [u+(m-identity(2))*(u-identity(1)), u+(m-identity(2))*(u-identity(1))]
+  #???: can exponentiation with arbitrary identities be rewritten using native operators?
+  elif (n == 3 and identity(1) == 0 and identity(2) == 1):
+    #exponentiation
+    return [u**(m-identity(3)+1), u**(m-identity(3)+1)]
+
+
+  elif m < identity(n):
+    #print "recurse"
+    #???: this seems to add time to live by duplicating it. Is that right? Should we be doing that?
+    #???: unsure how to pass the results of r_bounded as a single parameter. Choosing to just take the lower bound for simplicity
+    #???: I'm pretty sure this is wrong. Can we assume that the lower bound of the r component being sent to m_bounded will result in a lower range than the upper bound of r being sent to m_bounded?
+    rComponent = r_bounded(m+1, n, u, ttl, indentation+1)
+    lowerR = rComponent[0]
+    upperR = rComponent[1]
+    lowerM = m_bounded(n-1, u, lowerR, ttl, indentation+1)
+    upperM = m_bounded(n-1, u, upperR, ttl, indentation+1)
+    #???: this is not the honest way to combine ranges, but we're doing it
+    return [lowerM[0], upperM[1]]
+  #solve using definition
+  elif m == identity(n):
+    #print "identity"
+    # if m is the identity of n, return u
+    return [u, u]
+  elif m > identity(n):
+    #print "recurse"
+    #!!!: we only accept integers, so if m>identity, we can use positive integer algorithm
+    return [r(m,n,u), r(m,n,u)]
+
+def m_bounded (n, u, target, ttl, indentation = 1):
+  print (".   "*(indentation-1))+"m_bounded ("+str(n)+", "+str(u)+", "+str(target)+", "+str(ttl)+")"
+  bounds = [None, None]
+
+
+  guessIndex = 0;
+  while (guessIndex <= ttl-1):
+    guess = guessGenerator(guessIndex)
+    
+    test = r_bounded(guess, n, u, ttl, indentation+1)
+
+    if (test[0][0] <= target)
+    #is target a number? a range of numbers? several ranges? r_bounded returns a possibly-empty array of ranges. How would I compare a range or ranges to a range or ranges?
+    #assuming target is a number, the result of this guess is clear if test is strictly bigger. But what do I do if target is within one of those ranges? What do I do if it is between two ranges? I was planning to just note crossovers from strictly lower to strictly higher to infer bounds. But what do those other conditions imply? Anything?
+    ##
